@@ -391,6 +391,10 @@ impl ColorSyntax for CommandTailShape {
     type Info = ();
     type Input = Signature;
 
+    fn name(&self) -> &'static str {
+        "CommandTailShape"
+    }
+
     fn color_syntax<'a, 'b>(
         &self,
         signature: &Signature,
@@ -573,16 +577,14 @@ impl ColorSyntax for CommandTailShape {
             }
         }
 
-        args.spread_shapes(token_nodes.mut_shapes());
+        token_nodes.silently_mutate_shapes(|shapes| args.spread_shapes(shapes));
 
         // Consume any remaining tokens with backoff coloring mode
         color_syntax(&BackoffColoringMode, token_nodes, context);
 
         // This is pretty dubious, but it works. We should look into a better algorithm that doesn't end up requiring
         // this solution.
-        token_nodes
-            .mut_shapes()
-            .sort_by(|a, b| a.span.start().cmp(&b.span.start()));
+        token_nodes.sort_shapes()
     }
 }
 

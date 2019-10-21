@@ -103,9 +103,16 @@ impl Highlighter for Helper {
                 let shapes = {
                     // We just constructed a token list that only contains a pipeline, so it can't fail
                     color_fallible_syntax(&PipelineShape, &mut tokens, &expand_context).unwrap();
+                    tokens.with_tracer(|_, tracer| tracer.finish());
 
-                    tokens.shapes()
+                    tokens.state().shapes()
                 };
+
+                trace!(target: "nu::color_syntax", "{:#?}", tokens.tracer());
+
+                println!("");
+                ptree::print_tree(&tokens.tracer().clone().print(Text::from(line))).unwrap();
+                println!("");
 
                 trace!(target: "nu::shapes",
                     "SHAPES :: {:?}",
