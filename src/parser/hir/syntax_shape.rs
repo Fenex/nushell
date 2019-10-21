@@ -656,7 +656,7 @@ impl FallibleColorSyntax for BareShape {
         _context: &ExpandContext,
         shapes: &mut Vec<Spanned<FlatShape>>,
     ) -> Result<(), ShellError> {
-        token_nodes.peek_any_token(|token| match token {
+        token_nodes.peek_any_token("word", |token| match token {
             // If it's a bare token, color it
             TokenNode::Token(Spanned {
                 item: RawToken::Bare,
@@ -687,7 +687,7 @@ impl FallibleColorSyntax for BareShape {
         token_nodes: &'b mut TokensIterator<'a>,
         _context: &ExpandContext,
     ) -> Result<(), ShellError> {
-        let span = token_nodes.peek_any_token(|token| match token {
+        let span = token_nodes.peek_any_token("word", |token| match token {
             // If it's a bare token, color it
             TokenNode::Token(Spanned {
                 item: RawToken::Bare,
@@ -794,7 +794,8 @@ impl FallibleColorSyntax for PipelineShape {
         shapes: &mut Vec<Spanned<FlatShape>>,
     ) -> Result<(), ShellError> {
         // Make sure we're looking at a pipeline
-        let Pipeline { parts, .. } = token_nodes.peek_any_token(|node| node.as_pipeline())?;
+        let Pipeline { parts, .. } =
+            token_nodes.peek_any_token("pipeline", |node| node.as_pipeline())?;
 
         // Enumerate the pipeline parts
         for part in parts {
@@ -831,7 +832,7 @@ impl FallibleColorSyntax for PipelineShape {
         context: &ExpandContext,
     ) -> Result<(), ShellError> {
         // Make sure we're looking at a pipeline
-        let pipeline = token_nodes.peek_any_token(|node| node.as_pipeline())?;
+        let pipeline = token_nodes.peek_any_token("pipeline", |node| node.as_pipeline())?;
 
         let parts = &pipeline.parts[..];
 
@@ -1273,7 +1274,7 @@ fn parse_single_node<'a, 'b, T>(
     expected: &'static str,
     callback: impl FnOnce(RawToken, Span, SingleError) -> Result<T, ShellError>,
 ) -> Result<T, ShellError> {
-    token_nodes.peek_any_token(|node| match node {
+    token_nodes.peek_any_token(expected, |node| match node {
         TokenNode::Token(token) => callback(
             token.item,
             token.span,

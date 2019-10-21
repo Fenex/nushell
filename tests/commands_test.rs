@@ -246,13 +246,13 @@ fn it_arg_works_with_many_inputs_to_external_command() {
         let (stdout, stderr) = nu_combined!(
             cwd: dirs.test(), h::pipeline(
             r#"
-                echo file1 file2
+                echo hello world
                 | split-row " "
-                | cat $it
+                | ^echo $it
             "#
         ));
 
-        assert_eq!("text and more text", stdout);
+        assert_eq!("hello world", stdout);
         assert!(!stderr.contains("No such file or directory"));
     })
 }

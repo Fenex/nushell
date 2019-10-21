@@ -526,10 +526,11 @@ impl<'content> TokensIterator<'content> {
     // Peek the next token, including whitespace, but not EOF
     pub fn peek_any_token<'me, T>(
         &'me mut self,
+        expected: &'static str,
         block: impl FnOnce(&'content TokenNode) -> Result<T, ShellError>,
     ) -> Result<T, ShellError> {
         let peeked = start_next(self, false);
-        let peeked = peeked.not_eof("invariant");
+        let peeked = peeked.not_eof(expected);
 
         match peeked {
             Err(err) => return Err(err),
