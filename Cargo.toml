@@ -81,7 +81,7 @@ bytes = "0.4.12"
 log = "0.4.8"
 pretty_env_logger = "0.3.1"
 serde = { version = "1.0.104", features = ["derive"] }
-bson = { version = "0.14.0", features = ["decimal128"] }
+bson = { git = "https://github.com/Fenex/bson-rs", branch = "fix-decimal128", features = ["decimal128"] }
 serde_json = "1.0.44"
 serde-hjson = "0.9.1"
 serde_yaml = "0.8"
@@ -127,7 +127,7 @@ futures-timer = "1.0.2"
 clipboard = {version = "0.5", optional = true }
 ptree = {version = "0.2" }
 starship = { version = "0.33.1", optional = true}
-heim = {version = "0.0.9", optional = true}
+heim = { git = "https://github.com/heim-rs/heim", rev = "0b187f0d312b0589669e324b05dcb830b518c39c", optional = true}
 battery = {version = "0.7.5", optional = true}
 syntect = {version = "3.2.0", optional = true }
 onig_sys = {version = "=69.1.0", optional = true }
